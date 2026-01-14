@@ -2,7 +2,7 @@
 
 An interactive fractal city generator using L-systems with optional OpenMP parallelization, built in C++ with SFML.
 
-## Quick Start 
+## Quick Start
 
 This project is a **desktop SFML app**. 
 
@@ -50,7 +50,7 @@ g++ -std=c++17 \
 - **3D Isometric Buildings**: Buildings rendered with depth and shadows
 - **OpenMP Parallelization**: Multi-threaded L-system generation and building geometry
 - **Continuous Animation**: Wind effects and color cycling for dynamic visuals
-- **Infinite Zoom**: Zoom in/out to explore the fractal structures
+- **Zoom + Camera**: Pan and zoom to explore the scene
 - **Interactive Controls**: Real-time mode switching and parameter adjustment
 
 ## Controls
@@ -80,18 +80,6 @@ g++ -std=c++17 \
 - Parallel building geometry generation
 - Automatically uses all available CPU cores
 
-### Compilation
-
-**With OpenMP (macOS):**
-```bash
-g++ -std=c++17 -Xpreprocessor -fopenmp -I/opt/homebrew/include -I/opt/homebrew/opt/libomp/include -I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1 -L/opt/homebrew/lib -L/opt/homebrew/opt/libomp/lib -lomp main.cpp -lsfml-graphics -lsfml-window -lsfml-system -o fractal_city
-```
-
-**Without OpenMP:**
-```bash
-g++ -std=c++17 -I/opt/homebrew/include -I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1 -L/opt/homebrew/lib main.cpp -lsfml-graphics -lsfml-window -lsfml-system -o fractal_city
-```
-
 ### Requirements
 - C++17 compiler
 - SFML library
@@ -113,15 +101,6 @@ g++ -std=c++17 -I/opt/homebrew/include -I/Library/Developer/CommandLineTools/SDK
 - **Wind Effects**: Continuous motion through sine wave offsets
 - **Particle Effects**: Floating elements around buildings
 - **Organic Variation**: Random wobble and color variation
-
-## Submission
-
-This project demonstrates:
-- L-system implementation
-- Parallel programming with OpenMP
-- 3D graphics rendering
-- Interactive user interface
-- Creative visual design
 
 ---
 
