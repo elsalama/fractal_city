@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fractal City - L-System Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .subtitle {
+            text-align: center;
+            font-size: 1.2em;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+        
+        .section {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+        
+        h2 {
+            color: #ffd700;
+            margin-bottom: 15px;
+            font-size: 1.8em;
+        }
+        
+        .controls-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .control-item {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #ffd700;
+        }
+        
+        .key {
+            display: inline-block;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        .mode-badge {
+            display: inline-block;
+            background: #4CAF50;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            margin: 5px;
+        }
+        
+        .download-section {
+            text-align: center;
+            margin: 30px 0;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: #ffd700;
+            color: #333;
+            padding: 15px 30px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: bold;
+            margin: 10px;
+            transition: transform 0.2s;
+        }
+        
+        .btn:hover {
+            transform: scale(1.05);
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .feature {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .feature-icon {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        
+        code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .highlight {
+            background: rgba(255, 215, 0, 0.3);
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏙️ Fractal City</h1>
+        <p class="subtitle">Interactive L-System Visualization with OpenMP Parallelization</p>
+        
+        <div class="section">
+            <h2>📋 Quick Start</h2>
+            <p>To run the application, you have three options:</p>
+            <div class="download-section">
+                <a href="main.cpp" class="btn" download>📄 View Source Code</a>
+                <a href="README.md" class="btn" download>📖 Full Documentation</a>
+            </div>
+            <p style="margin-top: 20px; text-align: center;">
+                <strong>To run:</strong> Compile main.cpp with SFML (see README.md for instructions)
+            </p>
+        </div>
+        
+        <div class="section">
+            <h2>🎮 Controls</h2>
+            
+            <h3>Camera Movement</h3>
+            <div class="controls-grid">
+                <div class="control-item">
+                    <span class="key">W</span> Pan Up
+                </div>
+                <div class="control-item">
+                    <span class="key">S</span> Pan Down
+                </div>
+                <div class="control-item">
+                    <span class="key">A</span> Pan Left
+                </div>
+                <div class="control-item">
+                    <span class="key">D</span> Pan Right
+                </div>
+                <div class="control-item">
+                    <span class="key">Q</span> Zoom In
+                </div>
+                <div class="control-item">
+                    <span class="key">E</span> Zoom Out
+                </div>
+            </div>
+            
+            <h3>Mode Selection</h3>
+            <div class="controls-grid">
+                <div class="control-item">
+                    <span class="key">1</span> <span class="mode-badge">Grid</span> - Blocky city (90°)
+                </div>
+                <div class="control-item">
+                    <span class="key">2</span> <span class="mode-badge">Organic</span> - Flowing sprawl (45°)
+                </div>
+                <div class="control-item">
+                    <span class="key">3</span> <span class="mode-badge">Koch</span> - Snowflake pattern (60°)
+                </div>
+                <div class="control-item">
+                    <span class="key">4</span> <span class="mode-badge">Spiral</span> - Spiral expansion (20°)
+                </div>
+                <div class="control-item">
+                    <span class="key">5</span> <span class="mode-badge">Tree</span> - Branching structure (35°)
+                </div>
+            </div>
+            
+            <h3>Parameters</h3>
+            <div class="controls-grid">
+                <div class="control-item">
+                    <span class="key">[</span> / <span class="key">]</span> Decrease/Increase Iterations
+                </div>
+                <div class="control-item">
+                    <span class="key">↑</span> / <span class="key">↓</span> Adjust Wind Strength
+                </div>
+                <div class="control-item">
+                    <span class="key">←</span> / <span class="key">→</span> Adjust Angle
+                </div>
+                <div class="control-item">
+                    <span class="key">ESC</span> Quit
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>✨ Features</h2>
+            <div class="features">
+                <div class="feature">
+                    <div class="feature-icon">🔄</div>
+                    <h3>OpenMP Parallelization</h3>
+                    <p>Multi-threaded processing</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🏢</div>
+                    <h3>3D Buildings</h3>
+                    <p>Isometric perspective</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🌊</div>
+                    <h3>Wind Effects</h3>
+                    <p>Continuous animation</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🎨</div>
+                    <h3>Color Cycling</h3>
+                    <p>Dynamic visuals</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🔍</div>
+                    <h3>Zoom</h3>
+                    <p>Explore details</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Fork-Join Pattern</h3>
+                    <p>Parallel architecture</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>💡 What to Try</h2>
+            <ol style="margin-left: 20px; line-height: 2;">
+                <li>Switch between all 5 modes to see different fractal patterns</li>
+                <li>Adjust iterations with <code>[</code> and <code>]</code> to see complexity change</li>
+                <li>Zoom in/out to explore the fractal details</li>
+                <li>Adjust wind strength to see continuous motion</li>
+                <li>Change angles in real-time to morph the shapes</li>
+            </ol>
+        </div>
+        
+        <div class="section">
+            <h2>🔧 Technical Details</h2>
+            <p><strong>Language:</strong> C++17</p>
+            <p><strong>Graphics:</strong> SFML</p>
+            <p><strong>Parallelization:</strong> OpenMP (fork-join pattern)</p>
+            <p><strong>Lines of Code:</strong> 847</p>
+            <p><strong>Key Algorithms:</strong> L-systems, Turtle graphics, Parallel processing</p>
+        </div>
+        
+        <div class="section">
+            <h2>📝 Submission Notes</h2>
+            <p>This project demonstrates:</p>
+            <ul style="margin-left: 20px; line-height: 2;">
+                <li>✅ L-system implementation with multiple rule sets</li>
+                <li>✅ OpenMP parallelization (fork-join pattern)</li>
+                <li>✅ 3D graphics rendering with isometric perspective</li>
+                <li>✅ Interactive user interface</li>
+                <li>✅ Creative visual design with animations</li>
+                <li>✅ Performance optimization with multi-threading</li>
+            </ul>
+        </div>
+        
+        <div class="section">
+            <h2>📚 Files Included</h2>
+            <ul style="margin-left: 20px; line-height: 2;">
+                <li><code>main.cpp</code> - Complete source code</li>
+                <li><code>README.md</code> - Technical documentation</li>
+                <li><code>demo.html</code> - This interactive demo page</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

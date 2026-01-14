@@ -1,0 +1,28 @@
+# Compiled executables
+fractal_city
+*.exe
+*.out
+*.o
+*.a
+
+# Build artifacts
+*.dSYM/
+*.dylib
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.log
+
+# Binary files
+app
