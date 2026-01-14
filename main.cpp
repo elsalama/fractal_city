@@ -11,8 +11,8 @@
  *   g++ -std=c++17 -Xpreprocessor -fopenmp -I/opt/homebrew/include -I/opt/homebrew/opt/libomp/include -I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1 -L/opt/homebrew/lib -L/opt/homebrew/opt/libomp/lib -lomp main.cpp -lsfml-graphics -lsfml-window -lsfml-system -o fractal_city
  * 
  * The code uses fork-join parallelization with openmp making it way faster:
- * - Sequential: L-system string generation (iterations), turtle state tracking
- * - Parallel: Character replacement in L-system, building geometry generation
+ * Sequential: L-system string generation (iterations), turtle state tracking
+ * Parallel: Character replacement in L-system, building geometry generation
  * 
  * Note: Code automatically falls back to sequential execution if OpenMP is not available.
  */
