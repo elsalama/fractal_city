@@ -1,6 +1,48 @@
 # Fractal City - L-System Visualization
 
-An interactive fractal city generator using L-systems with OpenMP parallelization, built in C++ with SFML.
+An interactive fractal city generator using L-systems with optional OpenMP parallelization, built in C++ with SFML.
+
+## Quick Start 
+
+This project is a **desktop SFML app**. 
+
+- **Instructions page (GitHub Pages)**: open `demo.html` (or the Pages link)
+- **Run the graphics app (local)**: compile `main.cpp`, then run `./fractal_city`
+
+## Run Locally (macOS)
+
+### 1) Install dependencies
+
+- **SFML** (required): `brew install sfml`
+- **OpenMP** (optional): `brew install libomp`
+
+### 2) Compile
+
+**With OpenMP (recommended if you installed libomp):**
+
+```bash
+g++ -std=c++17 -Xpreprocessor -fopenmp \
+  -I/opt/homebrew/include -I/opt/homebrew/opt/libomp/include \
+  -I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1 \
+  -L/opt/homebrew/lib -L/opt/homebrew/opt/libomp/lib -lomp \
+  main.cpp -lsfml-graphics -lsfml-window -lsfml-system -o fractal_city
+```
+
+**Without OpenMP (works even if libomp is not installed):**
+
+```bash
+g++ -std=c++17 \
+  -I/opt/homebrew/include \
+  -I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1 \
+  -L/opt/homebrew/lib \
+  main.cpp -lsfml-graphics -lsfml-window -lsfml-system -o fractal_city
+```
+
+### 3) Run
+
+```bash
+./fractal_city
+```
 
 ## Features
 
