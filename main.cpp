@@ -10,7 +10,7 @@
  * Compile WITH OpenMP on macOS (requires: brew install libomp):
  *   g++ -std=c++17 -Xpreprocessor -fopenmp -I/opt/homebrew/include -I/opt/homebrew/opt/libomp/include -I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/c++/v1 -L/opt/homebrew/lib -L/opt/homebrew/opt/libomp/lib -lomp main.cpp -lsfml-graphics -lsfml-window -lsfml-system -o fractal_city
  * 
- * The code uses fork-join parallelization:
+ * The code uses fork-join parallelization with openmp making it way faster:
  * - Sequential: L-system string generation (iterations), turtle state tracking
  * - Parallel: Character replacement in L-system, building geometry generation
  * 
@@ -120,7 +120,8 @@ std::string generateLSystem(const std::string& axiom,
                 std::size_t end = (t == numThreads - 1) ? strLen : (t + 1) * chunkSize;
                 
                 std::string localChunk;
-                // More conservative reserve - rules can expand characters significantly
+                // More conservative reserve 
+                //rules can expand characters significantly
                 // Estimate: average 4 chars per char (some rules expand a lot)
                 localChunk.reserve((end - start) * 4);
                 
@@ -192,7 +193,7 @@ struct SceneGeometry {
     sf::VertexArray shadows;
 };
 
-// Simple random number generator (not too perfect, feels more human)
+// Simple random number generator 
 struct SimpleRNG {
     unsigned int seed;
     SimpleRNG(unsigned int s) : seed(s) {}
@@ -230,7 +231,8 @@ SceneGeometry buildGeometry(const std::string& sequence,
         sf::VertexArray(sf::PrimitiveType::Triangles)
     };
 
-    // PHASE 1: Sequential turtle state tracking (fork-join pattern: sequential phase)
+    // phase 1
+    // Sequential turtle state tracking (fork-join pattern: sequential phase)
     std::vector<SegmentData> segments;
     segments.reserve(maxSymbols / 2); // rough estimate
 
@@ -335,7 +337,8 @@ SceneGeometry buildGeometry(const std::string& sequence,
         std::vector<std::vector<sf::Vertex>> shadowVerts(numThreads);
         std::vector<std::vector<sf::Vertex>> particleVerts(numThreads);
         
-        // Fork: Start parallel region - each thread processes a subset of segments
+        // Fork: Start parallel region 
+        //each thread processes a subset of segments
         #pragma omp parallel
         {
             const int threadId = omp_get_thread_num();
@@ -375,7 +378,8 @@ SceneGeometry buildGeometry(const std::string& sequence,
                 sf::Color buildingColor = hsvToRgb(buildingHue, 0.7f, buildingVal);
                 sf::Color buildingColorDark = hsvToRgb(buildingHue, 0.7f, buildingVal * 0.6f);
                 
-                // Front face (vertical) - 8 vertices for 4 lines
+                // Front face (vertical)
+                // 8 vertices for 4 lines
                 sf::Vertex v;
                 v.position = sf::Vector2f{mid.x - isoX, mid.y};
                 v.color = buildingColor;
@@ -410,7 +414,8 @@ SceneGeometry buildGeometry(const std::string& sequence,
                 v.position = sf::Vector2f{mid.x - isoX, mid.y - height};
                 localBuildings.push_back(v);
                 
-                // Side face - 6 vertices for triangle
+                // Side face 
+                // 6 vertices for triangle
                 v.position = sf::Vector2f{mid.x + isoX, mid.y - height};
                 localBuildings.push_back(v);
                 v.position = sf::Vector2f{mid.x + isoX + isoY, mid.y - height - isoY};
@@ -424,7 +429,7 @@ SceneGeometry buildGeometry(const std::string& sequence,
                 v.position = sf::Vector2f{mid.x + isoX, mid.y - height};
                 localBuildings.push_back(v);
                 
-                // Shadow - 3 vertices for triangle
+                // Shadow 3 vertices for triangle
                 v.color = sf::Color(0, 0, 0, 80);
                 v.position = sf::Vector2f{mid.x - isoX + isoY, mid.y - isoY};
                 localShadows.push_back(v);
@@ -462,7 +467,7 @@ SceneGeometry buildGeometry(const std::string& sequence,
             }
         }
         #else
-        // Sequential fallback (OpenMP not available)
+      
         // Sequential fallback
         for (const SegmentData& seg : segments) {
             sf::Vector2f mid{
@@ -595,7 +600,8 @@ void configureLSystem(CityMode mode,
         angleDeg = 45.f;
         stepLength = 10.f;
     } else if (mode == CityMode::Spiral) {
-        // Spiral city - creates expanding spiral patterns
+        // Spiral city 
+        //creates expanding spiral patterns
         axiom = "A";
         rules = {
             {'A', "F[++A][--A]F[+A]"},
@@ -604,7 +610,8 @@ void configureLSystem(CityMode mode,
         angleDeg = 20.f;  // Smaller angle for tighter spirals
         stepLength = 8.f;
     } else if (mode == CityMode::Tree) {
-        // Tree-like structure - more branching, less spiral
+        // Tree-like structure 
+        //more branching, less spiral
         axiom = "A";
         rules = {
             {'A', "F[+A][-A][++A][--A]"},
@@ -718,7 +725,7 @@ int main() {
                     window.close();
                 }
 
-                // ----- Camera controls -----
+                // Camera controls 
                 const float panAmount = 30.f;
 
                 if (key->code == sf::Keyboard::Key::W) {
@@ -735,14 +742,14 @@ int main() {
                     view.zoom(1.1f);  // zoom out
                 }
 
-                // ----- Live angle tweak (morph shapes) -----
+                //  Live angle tweak (morph shapes) 
                 if (key->code == sf::Keyboard::Key::Left) {
                     angleDeg -= 5.f;
                 } else if (key->code == sf::Keyboard::Key::Right) {
                     angleDeg += 5.f;
                 }
 
-                // ----- Switch modes -----
+                // Switch modes 
                 if (key->code == sf::Keyboard::Key::Num1) {
                     mode = CityMode::Grid;
                     configureLSystem(mode, axiom, rules, angleDeg, stepLength);
@@ -774,7 +781,7 @@ int main() {
                     if (windStrength < 0.f) windStrength = 0.f;
                 }
 
-                // ----- Change iterations (fractal depth) -----
+                // Change iterations (fractal depth) 
                 if (key->code == sf::Keyboard::Key::LBracket) { // '['
                     if (iterations > 1) {
                         iterations--;
@@ -801,12 +808,7 @@ int main() {
                 maxSymbols = lsystemString.size();
         }
         
-        // Optional: loop growth for continuous animation
-        // Uncomment to make it never stop growing
-        // if (maxSymbols >= lsystemString.size() && maxSymbols > 0) {
-        //     maxSymbols = 0; // restart growth
-        // }
-
+        
         // animate color cycling
         baseHue += hueScrollSpeed * dt;
         
